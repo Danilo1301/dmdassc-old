@@ -1,0 +1,17 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  background: #000000!important;
+  color: white;
+}
+
+#area {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+}
+
+@font-face {
+    font-family: "segoe-ui-black";
+    src: url("/assets/fonts/segoe-ui-black-2.ttf");
+}
