@@ -1,5 +1,7 @@
 const express = require('express'), app = express(), path = require("path"), server = require('http').Server(app), io = require('socket.io')(server);
 
+const fs = require("fs");
+
 let __serverPath = path.join(__dirname, "../");
 
 app.use(express.static(path.join(__serverPath, "/public/")));
@@ -28,6 +30,12 @@ app.get(`/${process.env.GOOGLE_SITE_VERIFICATION}.html`, function(req, res) {
 //app.use('/twitchbot', twitchbot.router);
 app.use('/jogos', jogos.router);
 app.use('/bots', bots.router);
+
+app.all('/test', function(req, res) {
+  console.log("test");
+  fs.writeFileSync("./test_"+Date.now()+".log", Date.now());
+  res.end("working");
+});
 
 app.get('*', function(req, res) {
   res.redirect("/");

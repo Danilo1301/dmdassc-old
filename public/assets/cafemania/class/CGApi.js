@@ -35,10 +35,9 @@ class CGApi {
 
   static Load() {
     return new Promise(function(resolve, reject) {
-      console.warn("Check GOOGLE_CLIENT_ID!");
       gapi.load('auth2', function() {
         gapi.auth2.init({
-          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_id: "959981766504-9m4sm16bkc2572ki2umr4r86rmvpecdu.apps.googleusercontent.com",
           scope: 'profile'
         }).then((auth)=>{
           CGApi.Auth = auth;

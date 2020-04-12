@@ -14,7 +14,8 @@
     "steam": "^1.4.1",
     "steam-totp": "^2.1.1",
     "steamcommunity": "^3.41.3",
-    "tmi.js": "^1.5.0"
+    "tmi.js": "^1.5.0",
+    "protobufjs": "5.0.1"
   },
   "engines": {
     "node": "12.x"
