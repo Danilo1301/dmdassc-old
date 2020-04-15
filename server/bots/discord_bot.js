@@ -36,7 +36,13 @@ class Bot {
     this.client.login(token).then(this.onLogin.bind(this)).catch(console.error);
     this.client.on('ready', this.onReady.bind(this));
     this.client.on('message', this.onMessage.bind(this));
+
     return true;
+  }
+
+  static setMonitoring(m) {
+    this.monitoring = m;
+    this.monitoring.startMonitoring("discord-bot");
   }
 
   static onLogin(token) {
@@ -44,6 +50,7 @@ class Bot {
   }
 
   static onReady(e) {
+    this.monitoring.setStatus("discord-bot", true);
     this.log("Ready!");
     this.status.state = 2;
     this.status.startTime = Date.now();

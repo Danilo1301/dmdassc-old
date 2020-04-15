@@ -10,6 +10,13 @@ const __serverPath = path.join(__dirname, "../");
 
 require('./utils/local_env.js').defineEnvs();
 
+const monitoring = require('./utils/monitoring.js');
+monitoring.startMonitoring("web");
+monitoring.init();
+
+const projetos = require('./projetos');
+projetos.setServerPath(__serverPath);
+
 const jogos = require('./jogos');
 jogos.setServerPath(__serverPath);
 
@@ -22,12 +29,16 @@ cafemania_server.start(io);
 
 
 app.use(express.static(path.join(__serverPath, "/public/")));
+app.use('/projetos', projetos.router);
 app.use('/jogos', jogos.router);
 app.use('/bots', bots.router);
 
 
 app.get('/', function(req, res) { res.sendFile(`${__serverPath}/views/home.html`); });
 app.get('/chat', function(req, res) { res.sendFile(`${__serverPath}/views/chat.html`); });
+app.get('/uptimestatus', function(req, res) {
+  res.end(JSON.stringify(monitoring.getStatus()));
+});
 
 app.get(`/${process.env.GOOGLE_SITE_VERIFICATION}.html`, function(req, res) { res.send(`google-site-verification: ${process.env.GOOGLE_SITE_VERIFICATION}.html`); })
 
@@ -43,11 +54,16 @@ app.get('*', function(req, res) {
 
 
 server.listen(3000, function() {
+  monitoring.setStatus("web", true);
   console.log('[web] Listening on port 3000...');
 
   bots.discord_bot.login(process.env.DISCORD_TOKEN);
   bots.twitch_bot.login(process.env.TWITCH_OAUTH);
   bots.steam_bot.login(process.env.STEAM_USERNAME, process.env.STEAM_PASSWORD, process.env.STEAM_SHARED_SECRET);
+
+  bots.discord_bot.setMonitoring(monitoring);
+  bots.twitch_bot.setMonitoring(monitoring);
+  bots.steam_bot.setMonitoring(monitoring);
 });
 
 io.on('connection', function (socket) {

@@ -244,10 +244,18 @@ class Bot {
     this.client.connect();
   }
 
+  static setMonitoring(m) {
+    this.monitoring = m;
+    this.monitoring.startMonitoring("twitch-bot");
+  }
+
   static onMessage(channel, userstate, msg, self) {}
 
   static onConnected(addr, port) {
     console.log(`[twitch-bot] Connected to ${addr}:${port}`);
+
+    this.monitoring.setStatus("twitch-bot", true);
+
     Questions.setup(this);
 
 

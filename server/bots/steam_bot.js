@@ -35,6 +35,11 @@ class Bot {
     steamClient.connect();
   }
 
+  static setMonitoring(m) {
+    this.monitoring = m;
+    this.monitoring.startMonitoring("steam-bot");
+  }
+
   static getAuthCode(fake) {
     if(fake) { return SteamTotp.generateAuthCode(Math.random()*10000+"A"); }
     return this.auth_code = SteamTotp.generateAuthCode(this.settings.shared_secret); ;
@@ -55,6 +60,7 @@ class Bot {
     }).bind(this));
 
     steamClient.on('error', (function(e) {
+      this.monitoring.setStatus("steam-bot", false);
       this.log("Login failed");
       setTimeout(()=> {
         this.login();
@@ -63,11 +69,12 @@ class Bot {
 
     steamFriends.on("friendMsg", this.onFriendMessage.bind(this));
 
-    steamClient.on('logOnResponse', function() {
+    steamClient.on('logOnResponse', (function() {
       if(steamClient.loggedOn) {
+        this.monitoring.setStatus("steam-bot", true);
         steamFriends.sendMessage(OWNER_ID, "I'm now online!");
       }
-    });
+    }).bind(this));
   }
 
   static onFriendMessage(steamID, message) {
