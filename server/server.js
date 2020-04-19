@@ -14,6 +14,9 @@ const monitoring = require('./utils/monitoring.js');
 monitoring.startMonitoring("web");
 monitoring.init();
 
+const tf2_bot_server = require('./tf2-bot-server');
+tf2_bot_server.Init();
+
 const projetos = require('./projetos');
 projetos.setServerPath(__serverPath);
 
@@ -57,9 +60,9 @@ server.listen(3000, function() {
   monitoring.setStatus("web", true);
   console.log('[web] Listening on port 3000...');
 
-  bots.discord_bot.login(process.env.DISCORD_TOKEN);
-  bots.twitch_bot.login(process.env.TWITCH_OAUTH);
-  bots.steam_bot.login(process.env.STEAM_USERNAME, process.env.STEAM_PASSWORD, process.env.STEAM_SHARED_SECRET);
+  //bots.discord_bot.login(process.env.DISCORD_TOKEN);
+  //bots.twitch_bot.login(process.env.TWITCH_OAUTH);
+  //bots.steam_bot.login(process.env.STEAM_USERNAME, process.env.STEAM_PASSWORD, process.env.STEAM_SHARED_SECRET);
 
   bots.discord_bot.setMonitoring(monitoring);
   bots.twitch_bot.setMonitoring(monitoring);
@@ -69,7 +72,6 @@ server.listen(3000, function() {
 io.on('connection', function (socket) {
   console.log("[socket:home] New connection");
 });
-
 
 
 
