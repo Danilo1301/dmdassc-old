@@ -13,7 +13,7 @@ class TBStorage {
 
     if(!fs.existsSync(file_path)) {
       fs.writeFileSync(file_path, JSON.stringify({}));
-      return {};
+      return;
     }
 
     return JSON.parse(fs.readFileSync(file_path, "utf8"));

@@ -44,7 +44,7 @@ class TB {
 
       console.log(`Key price is: ${TBConversor.key.string}`);
 
-      this.GetSpreadsheetInfo().then((spreadsheet) => {
+      TB.GetSpreadsheetInfo().then((spreadsheet) => {
         TBStorage.StoreInFile("spreadsheet", spreadsheet);
 
         TB.BackpackSpreadsheet = spreadsheet;
@@ -139,6 +139,8 @@ class TB {
   {
     var self = this;
 
+    console.log(self.BackpackSpreadsheet)
+
     return new Promise(function(resolve, reject) {
       if(self.BackpackSpreadsheet.length != 0) { return resolve(self.BackpackSpreadsheet); }
 
@@ -151,9 +153,7 @@ class TB {
 
   static ReadLocalStorage()
   {
-    var data_spreadsheet = TBStorage.ReadFile("spreadsheet");
-
-    this.BackpackSpreadsheet = data_spreadsheet;
+    this.BackpackSpreadsheet = TBStorage.ReadFile("spreadsheet") || [];
   }
 
 }
