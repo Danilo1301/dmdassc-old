@@ -28,7 +28,7 @@ class TBQuery {
       return console.log("no items");
     }
 
-    console.log(item);
+    //console.log(item);
 
     if(item.urls.backpack == "") {
       self.query.shift();
@@ -39,7 +39,7 @@ class TBQuery {
 
     var ps = [];
 
-    console.log(`[query] ${this.query.length} items left`);
+    //console.log(`[query] ${this.query.length} items left`);
 
     ps.push(TBStn.GetItemInfo(item.urls.stn));
     ps.push(TBBackpack.GetItemInfo(item.urls.backpack));
@@ -79,7 +79,11 @@ class TBQuery {
 
       self.events.TriggerEvent("search_item_completed", [item, self.query.length]);
 
-      self.SearchNext();
+      setTimeout(()=> {
+        self.SearchNext();
+      },500)
+
+
     }).catch(()=> {
       console.log("ERROR")
     });

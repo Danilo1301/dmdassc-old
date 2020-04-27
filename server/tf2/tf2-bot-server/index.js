@@ -51,7 +51,7 @@ class TB {
 
         TBStn.GetItems().then((items) => {
 
-          console.log("---------------------")
+
 
           for (var item of items) {
             var found_item = null;
@@ -97,7 +97,7 @@ class TB {
             }
           }
 
-          console.log("Query")
+
           // --------------- query
 
           TBQuery.on("search_item_completed", (item, left)=> {
@@ -138,8 +138,6 @@ class TB {
   static GetSpreadsheetInfo()
   {
     var self = this;
-
-    console.log(self.BackpackSpreadsheet)
 
     return new Promise(function(resolve, reject) {
       if(self.BackpackSpreadsheet.length != 0) { return resolve(self.BackpackSpreadsheet); }
