@@ -47,6 +47,8 @@ class TB {
       this.GetSpreadsheetInfo().then((spreadsheet) => {
         TBStorage.StoreInFile("spreadsheet", spreadsheet);
 
+        TB.BackpackSpreadsheet = spreadsheet;
+
         TBStn.GetItems().then((items) => {
 
           console.log("---------------------")
