@@ -38,7 +38,7 @@ class TBBackpack {
 				// blockBlacklist: true,
 				// *not_used* ignoreAll: false
 
-        info.best_to_sell = self.GetBestOffer(info.sell_offers, {
+        info.best_to_sell = self.GetBestOffer(info.buy_offers, {
           ignoreOld: true,
   				ignorePaint: true,
   				ignoreNoQuote: true,
@@ -48,7 +48,7 @@ class TBBackpack {
   				blockBlacklist: true
         });
 
-        info.best_to_buy = self.GetBestOffer(info.buy_offers, {
+        info.best_to_buy = self.GetBestOffer(info.sell_offers, {
           ignoreOld: true,
   				ignoreNoQuote: true,
   				minutesLimit: 60
