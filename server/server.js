@@ -14,9 +14,6 @@ const monitoring = require('./utils/monitoring.js');
 monitoring.startMonitoring("web");
 monitoring.init();
 
-const tf2_bot_server = require('./tf2-bot-server');
-tf2_bot_server.Init();
-
 const projetos = require('./projetos');
 projetos.setServerPath(__serverPath);
 
@@ -27,6 +24,10 @@ const bots = require('./bots');
 bots.setServerPath(__serverPath);
 bots.createIoServer(io);
 
+const tf2 = require('./tf2');
+tf2.setServerPath(__serverPath);
+tf2.createIoServer(io);
+
 const cafemania_server = require('./cafemania_server');
 cafemania_server.start(io);
 
@@ -35,7 +36,7 @@ app.use(express.static(path.join(__serverPath, "/public/")));
 app.use('/projetos', projetos.router);
 app.use('/jogos', jogos.router);
 app.use('/bots', bots.router);
-
+app.use('/tf2', tf2.router);
 
 app.get('/', function(req, res) { res.sendFile(`${__serverPath}/views/home.html`); });
 app.get('/chat', function(req, res) { res.sendFile(`${__serverPath}/views/chat.html`); });
@@ -57,12 +58,13 @@ app.get('*', function(req, res) {
 
 
 server.listen(3000, function() {
+
   monitoring.setStatus("web", true);
   console.log('[web] Listening on port 3000...');
 
-  //bots.discord_bot.login(process.env.DISCORD_TOKEN);
-  //bots.twitch_bot.login(process.env.TWITCH_OAUTH);
-  //bots.steam_bot.login(process.env.STEAM_USERNAME, process.env.STEAM_PASSWORD, process.env.STEAM_SHARED_SECRET);
+  bots.discord_bot.login(process.env.DISCORD_TOKEN);
+  bots.twitch_bot.login(process.env.TWITCH_OAUTH);
+  bots.steam_bot.login(process.env.STEAM_USERNAME, process.env.STEAM_PASSWORD, process.env.STEAM_SHARED_SECRET);
 
   bots.discord_bot.setMonitoring(monitoring);
   bots.twitch_bot.setMonitoring(monitoring);
