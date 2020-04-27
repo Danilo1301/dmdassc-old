@@ -93,13 +93,13 @@ class TBStn {
     return new Promise(function(resolve) {
 
       (function loop(i) {
-        if(last_items_len == 0) { return resolve(total_items); }
+        if(last_items_len == 0 || i > 1) { return resolve(total_items); }
 
           if (true) new Promise((reslv) => {
             self.GetItemsInPage(category, i).then((items)=>{
               total_items = total_items.concat(items)
               last_items_len = items.length;
-              console.log(`[tf2] Found ${items.length} items in '${category}' page ${i} (Total: ${total_items.length})`)
+              //console.log(`[tf2] Found ${items.length} items in '${category}' page ${i} (Total: ${total_items.length})`)
               reslv();
             });
 

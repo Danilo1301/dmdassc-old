@@ -123,6 +123,17 @@ class TB {
     return;
   }
 
+  static AddUpdateListener(socket) {
+    TBQuery.on("search_item_completed", (item, left)=> {
+      socket.emit("item_completed", item);
+      TB.Items[item.id] = item;
+    });
+  }
+
+  static ManualUpdateItem(itemid) {
+    TBQuery.toAdd_query.push(TB.Items[itemid]);
+  }
+
   static AddRandomItemsToQuery()
   {
     var random_items = [];

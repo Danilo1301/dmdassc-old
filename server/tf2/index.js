@@ -34,6 +34,12 @@ const createIoServer = function(_io) {
   io.on('connection', function (socket) {
     console.log("[socket:tf2] New connection");
 
+    tf2_bot_server.AddUpdateListener(socket);
+
+    socket.on("update_item", (itemid) => {
+      tf2_bot_server.ManualUpdateItem(itemid);
+    });
+
     socket.on('items', function (data, callback) {
       console.log(data);
 
@@ -56,6 +62,10 @@ const createIoServer = function(_io) {
         if(data.t == 2) {
           val_a = a.profit2 ? a.profit2.scrap : null;
           val_b = b.profit2 ? b.profit2.scrap : null;
+        }
+        if(data.t == 3) {
+          val_a = a.profit3 ? a.profit3.scrap : null;
+          val_b = b.profit3 ? b.profit3.scrap : null;
         }
 
         return val_b - val_a;

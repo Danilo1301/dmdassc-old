@@ -25,8 +25,8 @@ class TBBackpack {
         var price_mp_s = body.slice(price_mp, body.indexOf("</a>", price_mp))
         info.price_marketplace = parseFloat(price_mp_s.slice(price_mp_s.indexOf("$")+1, price_mp_s.indexOf("</div>", price_mp_s.indexOf("$")))).toFixed(2);
 
-        info.sell_offers = self.GetOffers(sl_sell_orders);
-        info.buy_offers = self.GetOffers(sl_buy_orders);
+        info.sell_offers = self.GetOffers(sl_buy_orders);
+        info.buy_offers = self.GetOffers(sl_sell_orders);
 
         // Options
 				// ignoreOld: true,
@@ -38,7 +38,7 @@ class TBBackpack {
 				// blockBlacklist: true,
 				// *not_used* ignoreAll: false
 
-        info.best_to_sell = self.GetBestOffer(info.buy_offers, {
+        info.best_to_sell = self.GetBestOffer(info.sell_offers, {
           ignoreOld: true,
   				ignorePaint: true,
   				ignoreNoQuote: true,
@@ -48,7 +48,7 @@ class TBBackpack {
   				blockBlacklist: true
         });
 
-        info.best_to_buy = self.GetBestOffer(info.sell_offers, {
+        info.best_to_buy = self.GetBestOffer(info.buy_offers, {
           ignoreOld: true,
   				ignoreNoQuote: true,
   				minutesLimit: 60

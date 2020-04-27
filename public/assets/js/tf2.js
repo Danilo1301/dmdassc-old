@@ -51,6 +51,13 @@ $("#voltar").click(()=>{
   $("#options").show();
 })
 
+$(".refresh-item").click(()=>{
+  $(".refresh-item").prop("disabled", true)
+  $(".refresh-item").text("Aguarde...");
+
+  socket.emit("update_item", $(".refresh-item").attr("target-item"));
+})
+
 function applyInfoToElement(e, item) {
 
 
@@ -78,6 +85,12 @@ function applyInfoToElement(e, item) {
   if(item.profit2) {
     if(item.profit2.scrap > 0) {
       addProfitTag(e, "#a1a216", item.profit2.string, item.max_stock - item.stock);
+    }
+  }
+
+  if(item.profit3) {
+    if(item.profit3.scrap > 0) {
+      addProfitTag(e, "#a9a9a9", item.profit3.string, item.max_stock - item.stock);
     }
   }
 
@@ -158,6 +171,10 @@ function showitem(id) {
 
   var e = $("#item-info");
 
+  $(".refresh-item").attr("target-item", item.id);
+  $(".refresh-item").prop("disabled", false)
+  $(".refresh-item").text("Atualizar item");
+
   e.show();
   $("#items").hide();
   $("#options").hide();
@@ -180,10 +197,27 @@ function showitem(id) {
 
   e.find(".profit1").text(item.profit1 ? item.profit1.string : "?")
   e.find(".profit2").text(item.profit2 ? item.profit2.string : "?")
-  e.find(".profit3").text("---")
+  e.find(".profit3").text(item.profit3 ? item.profit3.string : "?")
 
   e.find(".percent").css("width", `${Math.round(item.stock/item.max_stock*100)}%`);
 }
+
+socket.on("item_completed", function(item) {
+  var found = null;
+
+  for (var it of listItems) {
+    if(it.id == item.id) { found = it; break;}
+  }
+
+  if(found != null) {
+    console.log(item.id + " updated!")
+    if($("#item-info").css("display") == "block" && $(`button[target-item='${item.id}']`)[0] != undefined) {
+      showitem(listItems.indexOf(it));
+      alert("Atualizado com sucesso!")
+    }
+  }
+})
+
 
 function msToTime(ms) {
 	var result = "0 segundos", seconds = 0, minutes = 0, hours = 0, days=0;

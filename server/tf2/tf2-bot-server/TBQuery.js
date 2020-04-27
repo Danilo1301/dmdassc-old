@@ -8,6 +8,8 @@ const TBBackpack = require("./TBBackpack");
 class TBQuery {
   static query = [];
 
+  static toAdd_query = [];
+
   static events = new TBEvents();
 
   static on = this.events.Setup();
@@ -20,8 +22,17 @@ class TBQuery {
   }
 
   static SearchNext() {
+    if(this.toAdd_query.length != 0) {
+      while (this.toAdd_query.length > 0) {
+        console.log(`Adding 1 new item to query`)
+        this.query.unshift( this.toAdd_query.pop() );
+      }
+    }
+
     var self = this;
     var item = this.query[0];
+
+
 
     if(!item) {
       this.events.TriggerEvent("search_ended");
@@ -70,6 +81,12 @@ class TBQuery {
         item.profit2 = TBConversor.Convert(item.price.stn.sell.scrap - item.price.backpack.buy.scrap);
       } else {
         item.profit2 = null;
+      }
+
+      if(item.price.backpack.sell && item.price.stn.sell) {
+        item.profit3 = TBConversor.Convert(item.price.stn.sell.scrap - item.price.backpack.sell.scrap);
+      } else {
+        item.profit3 = null;
       }
 
       item.updated_at = Date.now();
