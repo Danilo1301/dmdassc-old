@@ -93,7 +93,7 @@ class TBStn {
     return new Promise(function(resolve) {
 
       (function loop(i) {
-        if(last_items_len == 0 || i > 1) { return resolve(total_items); }
+        if(last_items_len == 0) { return resolve(total_items); }
 
           if (true) new Promise((reslv) => {
             self.GetItemsInPage(category, i).then((items)=>{
