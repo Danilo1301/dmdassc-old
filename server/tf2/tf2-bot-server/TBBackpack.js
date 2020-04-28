@@ -3,8 +3,7 @@ const TBConversor = require("./TBConversor");
 
 class TBBackpack {
   static body_preview = "";
-  static offer_blacklist_words = ["lvl", "level", "halloween", "painted", "spectral", "spectrum", "part", "spell", "voices", "below", "footprints", "lime", "pink", "black", "white", "orange", "light green", "purple", "gold", "team spirit", "after eight", "value of teamwork"];
-
+  static offer_blacklist_words = ["airborne", "enemies", "lvl", "level", "halloween", "painted", "spectral", "spectrum", "part", "spell", "voices", "below", "footprints", "lime", "pink", "black", "white", "orange", "light green", "purple", "gold", "team spirit", "after eight", "value of teamwork"];
 
   static GetItemInfo(url)
   {
