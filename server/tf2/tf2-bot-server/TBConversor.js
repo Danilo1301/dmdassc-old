@@ -5,13 +5,13 @@
 // 0.3 keys, 44.22 ref
 
 //issue: 54.0 ref //solved
+//issue: 1.0E+15 keys //solved
+//issue: 2 keys, 0 ref //solved
 
 class TBConversor {
   static key;
 
-  static Init() {
-
-  };
+  static Init() {};
 
   static SetKeyPrice(price) {
     this.key = price;
@@ -61,27 +61,25 @@ class TBConversor {
     var v = {k: 0, rf: 0, rc: 0, s: 0};
     var neg = false;
 
+
     if(scraps < 0) {
       neg = true;
       scraps = Math.abs(scraps);
     }
 
     if(this.key != undefined) {
-
-      while (scraps/this.key.scrap >= 1) {
-        scraps -= this.key.scrap;
-        v.k++;
-      }
+      v.k += Math.floor(scraps/this.key.scrap);
+      scraps -= v.k*this.key.scrap;
     }
 
-    while (scraps/9 >= 1) {
-      scraps -= 9;
-      v.rf++;
+    if(scraps/9 >= 1) {
+      v.rf += Math.floor(scraps/9);
+      scraps -= v.rf*9;
     }
 
-    while (scraps/3 >= 1) {
-      scraps -= 3;
-      v.rc++;
+    if(scraps/3 >= 1) {
+      v.rc += Math.floor(scraps/3);
+      scraps -= v.rc*3;
     }
 
     v.s = scraps;
@@ -94,10 +92,11 @@ class TBConversor {
     var rf = v.rf;
     var rf_s = v.rc*3+v.s;
 
-    if(rf >= 0 || rf_s > 0) {
+    if(rf > 0 || rf_s > 0) {
       if(v.k > 0) { str += ", "; }
       str += `${rf}${rf_s > 0 ? `.${rf_s*11}` : ``} ref`;
     }
+
     return str;
   }
 }

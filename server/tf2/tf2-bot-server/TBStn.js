@@ -2,6 +2,8 @@ const TBRequest = require("./TBRequest");
 
 const TBConversor = require("./TBConversor");
 
+//Genuine Companion Cube Pin
+
 class TBStn {
   static categories = ["tf2-items", "tf2-hats", "tf2-stranges", "tf2-weapons", "tf2-vintages", "tf2-genuines"];
 
@@ -99,7 +101,7 @@ class TBStn {
             self.GetItemsInPage(category, i).then((items)=>{
               total_items = total_items.concat(items)
               last_items_len = items.length;
-              //console.log(`[tf2] Found ${items.length} items in '${category}' page ${i} (Total: ${total_items.length})`)
+              console.log(`[tf2] Found ${items.length} items in '${category}' page ${i} (Total: ${total_items.length})`)
               reslv();
             });
 
