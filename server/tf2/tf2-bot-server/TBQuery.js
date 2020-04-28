@@ -52,9 +52,9 @@ class TBQuery {
 
     //console.log(`[query] ${this.query.length} items left`);
 
-    console.log(` Query ${this.query.length} items left`);
-    console.log(item)
-    console.log("\n")
+    //console.log(` Query ${this.query.length} items left`);
+    //console.log(item)
+    //console.log("\n")
 
     ps.push(TBStn.GetItemInfo(item.urls.stn));
     ps.push(TBBackpack.GetItemInfo(item.urls.backpack));
