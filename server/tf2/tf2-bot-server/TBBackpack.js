@@ -1,3 +1,6 @@
+//issue: Not ignoring old offers on 'best_to_sell' (Buy Orders)
+//status: Not fixed
+
 const TBRequest = require("./TBRequest");
 const TBConversor = require("./TBConversor");
 

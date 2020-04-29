@@ -53,7 +53,7 @@ $("#voltar").click(()=>{
 
 $(".refresh-item").click(()=>{
   $(".refresh-item").prop("disabled", true)
-  $(".refresh-item").text("Aguarde...");
+  $(".update-info").text("Atualizando, aguarde...");
 
   socket.emit("update_item", $(".refresh-item").attr("target-item"));
 })
@@ -62,7 +62,7 @@ function applyInfoToElement(e, item) {
 
 
   e.attr("item-id", item.id);
-  e.find(".item-name").text(`${item.craftable ? "" : "Non-Craftable "} ${item.full_name}`)
+  e.find(".item-name").text(item.full_name)
   e.find(".item-name").css("color", quality_colors[item.quality.id][1])
   e.find(".item-id").text("#" + item.id)
 
@@ -110,8 +110,9 @@ $(document).ready(function() {
       var el;
       if((el = $("#item_"+i))[0] != undefined) {
         if(el.attr("item-id") != item.id) {
-          applyInfoToElement(el, item);
+          //applyInfoToElement(el, item);
         }
+        applyInfoToElement(el, item);
         //console.log(el.attr("item-id"), item.id)
         continue;
       }
@@ -166,6 +167,8 @@ function openwdn(url) {
 function showitem(id) {
   var item = listItems[id];
 
+  console.log(item)
+
   if(!item.updated_at) {
     return alert("Este item ainda não foi atualizado!");
   }
@@ -174,7 +177,9 @@ function showitem(id) {
 
   $(".refresh-item").attr("target-item", item.id);
   $(".refresh-item").prop("disabled", false)
-  $(".refresh-item").text("Atualizar item");
+
+
+  $(".update-info").text("Ultima vez atualizado: " + new Date(item.updated_at).toString().split(" ")[4]);
 
   e.show();
   $("#items").hide();
@@ -203,7 +208,48 @@ function showitem(id) {
   e.find(".percent").css("width", `${Math.round(item.stock/item.max_stock*100)}%`);
 }
 
-socket.on("item_completed", function(item) {
+socket.on("item_completed", function(itemid, left) {
+  console.log(`Item #${itemid} updated (${left} left)`);
+  $(".items-maintext").text(`Itens (${left} na fila)`)
+
+  var found = null;
+
+  for (var it of listItems) {
+    if(it.id == itemid) { found = it; break;}
+  }
+
+  if(found) {
+    console.log('found')
+    socket.emit("get_item_info", itemid, function(item) {
+      listItems[found.pos] = item;
+      applyInfoToElement($(`.item#item_${found.pos}`), item);
+
+      if($("#item-info").css("display") == "block" && $(`button[target-item='${item.id}']`)[0] != undefined) {
+        console.log(found.pos)
+        console.log(listItems[found.pos])
+        showitem(found.pos);
+        //alert("Atualizado com sucesso!")
+      }
+
+
+    });
+  }
+
+  return;
+
+  var e;
+
+  if((e = $(".item[item-id='"+itemid+"'"))[0]) {
+    console.log(e)
+    socket.emit("get_item_info", itemid, function(item) {
+      console.log("info", item);
+    });
+  }
+
+
+
+  return;
+
   var found = null;
 
   for (var it of listItems) {

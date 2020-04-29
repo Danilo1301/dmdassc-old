@@ -139,8 +139,8 @@ class TB {
 
   static AddUpdateListener(socket) {
     TBQuery.on("search_item_completed", (item, left)=> {
-      socket.emit("item_completed", item);
-      TB.Items[item.id] = item;
+      socket.emit("item_completed", item.id, left);
+      //TB.Items[item.id] = item;
     });
   }
 

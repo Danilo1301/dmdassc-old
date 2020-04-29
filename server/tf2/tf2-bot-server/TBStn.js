@@ -5,8 +5,8 @@ const TBConversor = require("./TBConversor");
 //Genuine Companion Cube Pin
 
 class TBStn {
-  static categories = ["tf2-items", "tf2-hats", "tf2-stranges", "tf2-weapons", "tf2-vintages", "tf2-genuines"];
-  //static categories = ["tf2-vintages"];
+  //static categories = ["tf2-items", "tf2-hats", "tf2-stranges", "tf2-weapons", "tf2-vintages", "tf2-genuines"];
+  static categories = [];
 
   static body_preview = "";
 

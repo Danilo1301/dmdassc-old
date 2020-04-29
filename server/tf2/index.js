@@ -40,6 +40,10 @@ const createIoServer = function(_io) {
       tf2_bot_server.ManualUpdateItem(itemid);
     });
 
+    socket.on("get_item_info", (itemid, callback) => {
+      callback(tf2_bot_server.Items[itemid]);
+    });
+
     socket.on('items', function (data, callback) {
       //console.log(data);
 
