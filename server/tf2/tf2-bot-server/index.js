@@ -14,6 +14,8 @@ const path_backpack_items = ".data/tf2/backpack_items.json";
 const path_items = ".data/tf2/items.json";
 const path_data = ".data/tf2/data.json";
 
+//issue: Strange Pistol (Festivised) == Strange Pistol
+
 let items_custom_urls = [
   {name: "Unusual Horseless Headless Horsemann's Headtaker", craftable: true, quality: 5, url: "https://backpack.tf/stats/Unusual/Horseless%20Headless%20Horsemann%27s%20Headtaker/Tradable/Craftable"},
   {name: "Gargoyle Case", craftable: true, quality: 6, url: "https://backpack.tf/stats/Unique/Gargoyle%20Case/Tradable/Craftable"},
@@ -56,10 +58,17 @@ class TB {
           for (var item of items) {
             var found_item = null;
 
+            for (var k in TB.Items) {
+              if(TB.Items[k].full_name == item.full_name && TB.Items[k].craftable == item.craftable && TB.Items[k].quality.id == item.quality) {
+                found_item = TB.Items[k];
+                break;
+              }
+            }
+
             var id = makeid(20);
 
             if(found_item) {
-              id = item.id;
+              id = found_item.id;
             } else {
               TB.Items[id] = {id: id};
             }
@@ -69,7 +78,9 @@ class TB {
             TB.Items[id].craftable = item.craftable;
             TB.Items[id].quality = TBQuality.GetQualityById(item.quality);
             TB.Items[id].img = item.img;
-            TB.Items[id].href = item.href;
+
+
+            //TB.Items[id].href = item.href;
 
             if(!TB.Items[id].urls) {
               TB.Items[id].urls = {stn: "https://stntrading.eu" + item.href, backpack: ""};
@@ -98,6 +109,8 @@ class TB {
           }
 
 
+
+          TBStorage.StoreInFile("items", TB.Items);
           // --------------- query
 
           TBQuery.on("search_item_completed", (item, left)=> {
@@ -106,7 +119,7 @@ class TB {
             TB.Items[item.id] = item;
 
             if(TBQuery.items_completed % 5 == 0) {
-              //Save
+              TBStorage.StoreInFile("items", TB.Items);
             }
           })
 
@@ -122,6 +135,7 @@ class TB {
 
     return;
   }
+
 
   static AddUpdateListener(socket) {
     TBQuery.on("search_item_completed", (item, left)=> {
@@ -143,6 +157,7 @@ class TB {
     while (random_items.length > 0) {
       TBQuery.AddItem(random_items.splice(Math.round(Math.random()*(random_items.length-1)), 1)[0]);
     }
+    console.log(`Starting queue with ${TBQuery.query.length} items`)
     TBQuery.SearchNext();
   }
 
@@ -163,6 +178,7 @@ class TB {
   static ReadLocalStorage()
   {
     this.BackpackSpreadsheet = TBStorage.ReadFile("spreadsheet") || [];
+    this.Items = TBStorage.ReadFile("items") || {};
   }
 
 }

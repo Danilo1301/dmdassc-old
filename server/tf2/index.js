@@ -41,7 +41,7 @@ const createIoServer = function(_io) {
     });
 
     socket.on('items', function (data, callback) {
-      console.log(data);
+      //console.log(data);
 
       var items = [];
       for (var item_id in tf2_bot_server.Items) {

@@ -62,7 +62,7 @@ function applyInfoToElement(e, item) {
 
 
   e.attr("item-id", item.id);
-  e.find(".item-name").text(item.full_name)
+  e.find(".item-name").text(`${item.craftable ? "" : "Non-Craftable "} ${item.full_name}`)
   e.find(".item-name").css("color", quality_colors[item.quality.id][1])
   e.find(".item-id").text("#" + item.id)
 
@@ -70,6 +70,7 @@ function applyInfoToElement(e, item) {
 
   e.find("img").attr("src", item.img)
   e.find("img").css("border-color", quality_colors[item.quality.id][1])
+  e.find("img").css("border-style", item.craftable ? "solid" : "dashed")
   e.find("img").css("background-color", quality_colors[item.quality.id][0])
 
   e.attr("onclick", "showitem('"+listItems.indexOf(item)+"')");

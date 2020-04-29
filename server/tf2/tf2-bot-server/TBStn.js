@@ -6,6 +6,7 @@ const TBConversor = require("./TBConversor");
 
 class TBStn {
   static categories = ["tf2-items", "tf2-hats", "tf2-stranges", "tf2-weapons", "tf2-vintages", "tf2-genuines"];
+  //static categories = ["tf2-vintages"];
 
   static body_preview = "";
 
@@ -78,6 +79,7 @@ class TBStn {
         for (var v of values) {
           items = items.concat(v);
         }
+        console.log(`${items.length} items found on STN`)
         resolve(items);
       });
 
@@ -101,6 +103,7 @@ class TBStn {
             self.GetItemsInPage(category, i).then((items)=>{
               total_items = total_items.concat(items)
               last_items_len = items.length;
+
               console.log(`[tf2] Found ${items.length} items in '${category}' page ${i} (Total: ${total_items.length})`)
               reslv();
             });
