@@ -50,6 +50,13 @@ const createIoServer = function(_io) {
 
     socket.on("save_blacklist", (value) => {
       var words = value.split(" ");
+      while (words.includes(" ")) {
+        words.splice(words.indexOf(" "), 1);
+      }
+      while (words.includes("")) {
+        words.splice(words.indexOf(""), 1);
+      }
+      console.log(words)
       tf2_bot_server.SetBlackList(words);
     })
 
