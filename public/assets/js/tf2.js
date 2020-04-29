@@ -32,9 +32,16 @@ $("#toggle-options-tab").click(()=> {
   $("#options-tab").show();
   $("#options-tab").css("opacity", "1");
   $("#options-tab").css("top", "0px");
+
+  $("#edit-blacklist").show();
+  $("#collapse_blacklist").removeClass("show")
 })
 
 $("#options-tab #close").click(()=> {
+  if($("#collapse_blacklist").hasClass("show")) {
+    socket.emit("save_blacklist", $("#exampleFormControlTextarea1").val());
+  }
+
   $("#options-tab").css("opacity", "0");
   $("#options-tab").css("top", "-500px");
   getItems();
@@ -56,6 +63,28 @@ $(".refresh-item").click(()=>{
   $(".update-info").text("Atualizando, aguarde...");
 
   socket.emit("update_item", $(".refresh-item").attr("target-item"));
+})
+
+$("#edit-blacklist").click(()=> {
+  $("#exampleFormControlTextarea1").val("Carregando lista...");
+  $("#exampleFormControlTextarea1").prop("disabled", true)
+  $("#edit-blacklist").hide();
+
+
+  socket.emit("get_blacklist", function(words) {
+    console.log("Got", words)
+
+    var val = "";
+    for (var w of words) {
+      val += w + " ";
+    }
+
+
+    $("#exampleFormControlTextarea1").val(val);
+    $("#exampleFormControlTextarea1").prop("disabled", false);
+    //$("#edit-blacklist").prop("disabled", true);
+    //$("#edit-blacklist").text("Salvar");
+  })
 })
 
 function applyInfoToElement(e, item) {

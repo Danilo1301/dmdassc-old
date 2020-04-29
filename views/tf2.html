@@ -21,7 +21,7 @@
           <div class="row">
             <div class="col-auto mr-auto">Opções</div>
             <div class="col-auto">
-              <button id="close" type="button" class="btn btn-danger btn-sm px-4">Fechar</button>
+              <button id="close" type="button" class="btn btn-success btn-sm px-4">Salvar</button>
             </div>
           </div>
 
@@ -41,19 +41,22 @@
                 </select>
               </div>
 
-            </div>
-            <div class="col-sm" style='display: none;'>
-              <h4 class="mb-3">Atualização em tempo real</h4>
+              <h4 class="mb-3">Blacklist</h4>
 
-              <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-outline-success active">
-                  <input type="radio" name="options" id="option1" autocomplete="off" checked> Ativado
-                </label>
-                <label class="btn btn-outline-danger">
-                  <input type="radio" name="options" id="option2" autocomplete="off"> Desativado
-                </label>
+              <div class="collapse" id="collapse_blacklist">
+                <textarea disabled style="margin-bottom: 15px;" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
               </div>
+              <p>
+                <button id="edit-blacklist" class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse_blacklist" aria-expanded="false" aria-controls="collapseExample">
+                  Editar blacklist
+                </button>
+              </p>
+
+
+
             </div>
+
+
           </div>
         </div>
       </div>

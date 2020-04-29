@@ -136,6 +136,13 @@ class TB {
     return;
   }
 
+  static GetBlackList() {
+    return TBBackpack.offer_blacklist_words;
+  }
+
+  static SetBlackList(words) {
+    return TBBackpack.offer_blacklist_words = words;
+  }
 
   static AddUpdateListener(socket) {
     TBQuery.on("search_item_completed", (item, left)=> {

@@ -44,6 +44,15 @@ const createIoServer = function(_io) {
       callback(tf2_bot_server.Items[itemid]);
     });
 
+    socket.on("get_blacklist", (callback) => {
+      callback(tf2_bot_server.GetBlackList())
+    })
+
+    socket.on("save_blacklist", (value) => {
+      var words = value.split(" ");
+      tf2_bot_server.SetBlackList(words);
+    })
+
     socket.on('items', function (data, callback) {
       //console.log(data);
 
