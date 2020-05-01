@@ -6,29 +6,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="icon.ico" type="image/x-icon">
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-    <!--<link rel="stylesheet" href="/assets/css/global.css">-->
-    <!-- Template at https://bootsnipp.com/snippets/5MaWv -->
+
     <link rel="stylesheet" href="/assets/css/chat.css">
   </head>
   <body>
-    <div class="messaging">
-      <div class="inbox_msg">
-      	<div class="mesgs">
 
-      	  <div class="msg_history"></div>
 
-      	  <div class="type_msg">
-        		<div class="input_msg_write">
-        		  <input type="text" class="write_msg" placeholder="Enviar mensagem" />
-        		  <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane" aria-hidden="true">ENVIAR</i></button>
-        		</div>
-      	  </div>
-      	</div>
+    <div id="inner_remaining" class="container-fluid border bg-light">
+
+      <div id="scroll-wnd" style="height: 100%; overflow: auto;" class="row align-items-end">
+
+        <div class="msg-list container-fluid">
+
+
+
+        </div>
+      </div>
+
+    </div>
+
+
+    <div id="inner_fixed" class="">
+      <div class="container-fluid" style="height: 100%">
+        <div class="row" style="height: 100%; padding: 5px;">
+          <div class="col-9">
+            <div style="position: relative;">
+              <input ype="email" style="height: 100%" id="inputText" class="form-control" placeholder="Digite sua mensagem">
+              <div class="container-fluid bg-white border" style="display: none; background: gray; position: absolute; top: -120px; height: 120px; width: 100%;">
+                <div class="row px-2 py-2 border" style="height: 40px;">/admin</div>
+                <div class="row px-2 py-2 border" style="height: 40px;">/help</div>
+                <div class="row px-2 py-2 border" style="height: 40px;">/nick</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <button style="height: 100%;" class="btn btn-primary btn-block" type="submit">Enviar</button>
+          </div>
+        </div>
       </div>
     </div>
-    
+
     <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/socket.io.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
+
     <script src="/assets/js/chat.js"></script>
   </body>
 </html>

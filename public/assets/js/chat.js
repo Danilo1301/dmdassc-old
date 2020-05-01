@@ -1,57 +1,89 @@
 let messages = [];
 
 let message_templates = [(`
-  <div class="server_incoming_msg">
-    <div class="server_received_msg">
-      <div class="received_withd_msg">
-        <p></p>
-      </div>
+  <div class="msg row border py-3">
+    <div class="col-auto px-2" style="max-width: 60px;">
+      <span class="msg-time">TIME</span>
+    </div>
+    <div class="col px-1">
+      <span style="display: none;" class="msg-badge badge">BADGE</span>
+      <b class="msg-username">USER_NAME</b>
+      <b>:</b>
+      <span class="msg-text">MESSAGE</span>
     </div>
   </div>
 `), (`
-  <div class="incoming_msg">
-    <div class="incoming_msg_img">
-      <img src="https://ptetutorials.com/images/user-profile.png">
+  <div class="msg row border py-3">
+    <div class="col-auto px-2" style="max-width: 60px;">
+      <span class="msg-time">TIME</span>
     </div>
-    <div class="received_msg">
-      <div class="received_withd_msg">
-        <p><b class="nickname"></b><span></span></p>
-      </div>
-    </div>
-  </div>
-`),(`
-  <div class="outgoing_msg">
-    <div class="outgoing_msg_img">
-      <img src="https://ptetutorials.com/images/user-profile.png">
-    </div>
-    <div class="sent_msg">
-      <p><b class="nickname"></b><span></span></p>
+    <div class="col px-1">
+      <span style="display: none;" class="msg-badge badge">SERVER</span>
+      <b class="msg-text">SERVER_MESSAGE</b>
     </div>
   </div>
 `)];
 
-messages.push({id: "1523", type: 0, content: "MyUser entrou no chat"});
-messages.push({id: "6235", type: 1, content: "hm", nickname: "OtherUser25"});
-messages.push({id: "8723", type: 1, content: "hm", nickname: "MyUser"});
+messages.push({id: "1523", type: 1, content: "MyUser entrou no chat", background: "#caf988", badge: {color: "#ffffff", background: "#3fa008", text: "Server"}});
+messages.push({id: "6235", type: 0, content: "hm", nickname: "OtherUser25"});
+messages.push({id: "8723", type: 0, content: "hm", nickname: "MyUser"});
+
+const setMsgInfo = function(msg_e, msg) {
+
+  if(msg.badge) {
+    msg_e.find(".msg-badge").show();
+    msg_e.find(".msg-badge").text(msg.badge.text);
+    msg_e.find(".msg-badge").css("background-color", msg.badge.background);
+    msg_e.find(".msg-badge").css("color", msg.badge.color);
+  }
+
+  msg_e.find(".msg-username").text(msg.nickname);
+  msg_e.find(".msg-text").text(msg.content);
+
+  msg_e.find(".msg-time").text("11:44");
+
+  if(msg.background) {
+    msg_e.css("background-color", msg.background);
+  }
+}
 
 setInterval(()=> {
+  var hasNewMessage = false;
+
   for (var msg of messages) {
 
     if($("div[msg-id='"+msg.id+"']")[0] != undefined) { continue; }
 
     var msg_e;
-    if(msg.type == 0) {
-      msg_e = $(message_templates[0]);
-      msg_e.find("p").text(msg.content);
-    }
 
-    if(msg.type == 1) {
-      msg_e = $(message_templates[((msg.nickname == "MyUser") ? 2 : 1)]);
-      msg_e.find(".nickname").text(msg.nickname + ":");
-      msg_e.find("span").text(msg.content);
-    }
+    msg_e = $(message_templates[msg.type]);
 
     msg_e.attr("msg-id", msg.id);
-    $(".msg_history").append(msg_e);
+
+    msg_e.css("opacity", "0");
+    msg_e.hide();
+
+    $(".msg-list").append(msg_e);
+
+    setMsgInfo(msg_e, msg);
+
+    msg_e.show();
+    msg_e.css("opacity", "1");
+
+    hasNewMessage = true;
   }
-},500)
+
+  var scroll = $("#scroll-wnd")[0];
+
+  if(hasNewMessage) {
+    if(scroll.scrollHeight - scroll.scrollTop < scroll.clientHeight + 100) {
+      scroll.scrollTop = scroll.scrollHeight - scroll.clientHeight;
+    }
+  }
+
+
+},100)
+
+setInterval(()=> {
+  messages.push({id: "msg"+Math.random(), type: 0, content: ""+Math.random(), nickname: "MyUser", badge: {color: "#ffffff", background: "#dc3545", text: "Mod"}});
+}, 1000)
