@@ -1,4 +1,7 @@
+const socket = io("/chat");
+
 let messages = [];
+
 
 let message_templates = [(`
   <div class="msg row border py-3">
@@ -24,9 +27,9 @@ let message_templates = [(`
   </div>
 `)];
 
-messages.push({id: "1523", type: 1, content: "MyUser entrou no chat", background: "#caf988", badge: {color: "#ffffff", background: "#3fa008", text: "Server"}});
-messages.push({id: "6235", type: 0, content: "hm", nickname: "OtherUser25"});
-messages.push({id: "8723", type: 0, content: "hm", nickname: "MyUser"});
+//messages.push({id: "1523", type: 1, content: "MyUser entrou no chat", background: "#caf988", badge: {color: "#ffffff", background: "#3fa008", text: "Server"}});
+//messages.push({id: "6235", type: 0, content: "hm", nickname: "OtherUser25"});
+//messages.push({id: "8723", type: 0, content: "hm", nickname: "MyUser"});
 
 const setMsgInfo = function(msg_e, msg) {
 
@@ -40,14 +43,69 @@ const setMsgInfo = function(msg_e, msg) {
   msg_e.find(".msg-username").text(msg.nickname);
   msg_e.find(".msg-text").text(msg.content);
 
-  msg_e.find(".msg-time").text("11:44");
+  var t = new Date(msg.time).toString().split(" ")[4].split(":")
+
+  msg_e.find(".msg-time").text(`${t[0]}:${t[1]}`);
 
   if(msg.background) {
     msg_e.css("background-color", msg.background);
   }
 }
 
+const getMessages = function() {
+  socket.emit("get_messages", (data) => {
+
+
+    for (var msg of data) {
+      var added = false;
+
+      for (var m of messages) {
+        if(m.id == msg.id) {
+          added = true; break;
+        }
+      }
+
+      if(!added) {
+        messages.push(msg);
+      }
+    }
+
+    for (var m of messages) {
+      var exists = false;
+
+      for (var msg of data) {
+        if(m.id == msg.id) {
+          exists = true; break;
+        }
+      }
+
+      if(!exists) {
+        var n = messages.splice(messages.indexOf(m), 1)
+        $("div[msg-id='"+m.id+"']").remove();
+      }
+    }
+
+
+
+
+    setTimeout(()=> {
+      getMessages();
+    }, 100)
+  });
+}
+getMessages();
+
+
+const sendMessage = function() {
+  socket.emit("send_message", $("#inputText").val());
+  $("#inputText").val("")
+}
+
+$("#inputText").on('keydown', function(e) { if (e.which == 13) { sendMessage(); } });
+
 setInterval(()=> {
+
+
   var hasNewMessage = false;
 
   for (var msg of messages) {
@@ -80,10 +138,11 @@ setInterval(()=> {
       scroll.scrollTop = scroll.scrollHeight - scroll.clientHeight;
     }
   }
+},100);
 
-
-},100)
-
-setInterval(()=> {
-  messages.push({id: "msg"+Math.random(), type: 0, content: ""+Math.random(), nickname: "MyUser", badge: {color: "#ffffff", background: "#dc3545", text: "Mod"}});
-}, 1000)
+socket.on("connect", () => {
+  console.log("join..")
+  socket.emit("join", (info) => {
+    console.log("join answer", info)
+  });
+})

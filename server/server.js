@@ -4,6 +4,7 @@ const path = require("path");
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const fs = require("fs");
+const cookieParser = require('cookie-parser');
 
 const ping_logfile = "./pings.log";
 const __serverPath = path.join(__dirname, "../");
@@ -28,18 +29,23 @@ const tf2 = require('./tf2');
 tf2.setServerPath(__serverPath);
 tf2.createIoServer(io);
 
+const chat = require('./chat');
+chat.setServerPath(__serverPath);
+chat.createIoServer(io);
+
 const cafemania_server = require('./cafemania_server');
 cafemania_server.start(io);
 
+app.use(cookieParser());
 
 app.use(express.static(path.join(__serverPath, "/public/")));
 app.use('/projetos', projetos.router);
 app.use('/jogos', jogos.router);
 app.use('/bots', bots.router);
 app.use('/tf2', tf2.router);
+app.use('/chat', chat.router);
 
 app.get('/', function(req, res) { res.sendFile(`${__serverPath}/views/home.html`); });
-app.get('/chat', function(req, res) { res.sendFile(`${__serverPath}/views/chat.html`); });
 app.get('/uptimestatus', function(req, res) {
   res.end(JSON.stringify(monitoring.getStatus()));
 });
@@ -62,9 +68,9 @@ server.listen(3000, function() {
   monitoring.setStatus("web", true);
   console.log('[web] Listening on port 3000...');
 
-  bots.discord_bot.login(process.env.DISCORD_TOKEN);
-  bots.twitch_bot.login(process.env.TWITCH_OAUTH);
-  bots.steam_bot.login(process.env.STEAM_USERNAME, process.env.STEAM_PASSWORD, process.env.STEAM_SHARED_SECRET);
+  //bots.discord_bot.login(process.env.DISCORD_TOKEN);
+  //bots.twitch_bot.login(process.env.TWITCH_OAUTH);
+  //bots.steam_bot.login(process.env.STEAM_USERNAME, process.env.STEAM_PASSWORD, process.env.STEAM_SHARED_SECRET);
 
   bots.discord_bot.setMonitoring(monitoring);
   bots.twitch_bot.setMonitoring(monitoring);
