@@ -21,7 +21,8 @@ class CUser {
   constructor(uid, socket) {
     this.uid = uid;
     this.address = "";
-    this.nickname = "User " + makeid(5);
+    this.nickname = "User-" + makeid(5);
+    this.localMessages = [];
   }
 
   SetupSocket(socket) {
@@ -29,6 +30,21 @@ class CUser {
     this.socket.on("send_message", this.OnSendMessage.bind(this));
     this.socket.on("get_messages", this.OnGetMessages.bind(this));
     this.socket.on("disconnect", this.OnDisconnect.bind(this));
+
+    this.localMessages = [];
+
+    var msg_join = CChat.CreateServerMessage("#caf988", this.nickname + " joined the chat");
+    msg_join.time -= 1;
+
+    var msg = this.CreateLocalMessage(`
+      <div class="container-fluid">
+        <div class="row"></div>
+        <div class="row">Welcome, ${this.nickname}!</div>
+        <div class="row">Type /help for a list of commands</div>
+        <div class="row"></div>
+      </div>
+      `);
+    msg.background = "#ecd82e";
   }
 
   GetInfo() {
@@ -37,22 +53,73 @@ class CUser {
 
   OnSendMessage(content) {
     if(content.startsWith("/")) {
-      if(content.toLowerCase() == "/clearchat") {
-        CChat.Messages = [];
+
+      var args = content.split(" ");
+      var cmd = args.splice(0, 1)[0].toLowerCase().slice(1);
+
+
+      if(cmd == "help") {
+        var msg = this.CreateLocalMessage(`
+          <div class="container-fluid">
+            <div class="row">Commands:</div>
+            <div class="row">/help</div>
+            <div class="row">/nick</div>
+          </div>
+          `);
+        return
       }
+
+      if(cmd == "clearchat") {
+        return CChat.Messages = [];
+      }
+
+      if(cmd == "nick") {
+        var str = "";
+        for (var s of args) {
+          str += `${s}${(args.indexOf(s) == args.length-1) ? "" : " "}`;
+        }
+
+        if(str.length == 0) {
+          return this.CreateLocalMessage(`/nick [your-nick]`);
+        }
+
+        if(str.length <= 2) {
+          return this.CreateLocalMessage(`Nickname too short!`);
+        }
+        if(str.length > 22) {
+          return this.CreateLocalMessage(`Nickname too long!`);
+        }
+
+        //this.CreateLocalMessage(`You changed your name to '${str}'`);
+        CChat.CreateServerMessage("#f6c94e", `'${this.nickname}' changed his nickname to '${str}'`);
+        this.nickname = str;
+        return
+      }
+
+      this.CreateLocalMessage("Unknown command: " + content);
       return;
     }
 
-
     CChat.CreateUserMessage(this, content);
+  }
+
+  CreateLocalMessage(content) {
+    var msg = CChat.CreateDefaultMessage(true);
+    msg.content = content;
+    msg.background = "#c0c0c0";
+    msg.allowHtml = true;
+    this.localMessages.push(msg);
+    return msg;
   }
 
   OnGetMessages(callback) {
     var messages = [];
 
-    for (var i = CChat.Messages.length-1, n = 0; i >= 0; i--) {
+    var all = [].concat(CChat.Messages).concat(this.localMessages);
+
+    for (var i = all.length-1, n = 0; i >= 0; i--) {
       if(n < 15) {
-        messages.push(CChat.Messages[i]);
+        messages.push(all[i]);
       }
       n++;
     }
@@ -75,14 +142,14 @@ class CChat {
 
   static Init() {}
 
-  static CreateDefaultMessage() {
+  static CreateDefaultMessage(notGlobal) {
     var msg = {
       id: makeid(40),
       background: "#ffffff",
       type: 1,
       time: Date.now()
     };
-    this.Messages.push(msg);
+    if(notGlobal != true) { this.Messages.push(msg); }
     return msg;
   }
 
@@ -91,13 +158,16 @@ class CChat {
     msg.content = content;
     msg.type = 0;
     msg.nickname = user.nickname;
+    return msg;
   }
 
-  static CreateServerMessage(backgrond, content) {
+  static CreateServerMessage(background, content) {
     var msg = this.CreateDefaultMessage();
     msg.content = content;
-    msg.background = backgrond;
+    msg.background = background;
     msg.type = 1;
+    msg.allowHtml = true;
+    return msg;
   }
 
   static OnUserJoin(socket, callback) {
@@ -110,8 +180,6 @@ class CChat {
 
     user.address = address;
     user.SetupSocket(socket);
-
-    CChat.CreateServerMessage("#caf988", user.nickname + " joined the chat");
 
     callback(user.GetInfo());
   }

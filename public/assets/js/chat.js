@@ -41,7 +41,12 @@ const setMsgInfo = function(msg_e, msg) {
   }
 
   msg_e.find(".msg-username").text(msg.nickname);
-  msg_e.find(".msg-text").text(msg.content);
+  if(msg.allowHtml) {
+    msg_e.find(".msg-text").html(msg.content);
+  } else {
+    msg_e.find(".msg-text").text(msg.content);
+  }
+
 
   var t = new Date(msg.time).toString().split(" ")[4].split(":")
 
@@ -106,7 +111,7 @@ $("#inputText").on('keydown', function(e) { if (e.which == 13) { sendMessage(); 
 setInterval(()=> {
 
 
-  var hasNewMessage = false;
+  var newMessages = 0;
 
   for (var msg of messages) {
 
@@ -128,13 +133,13 @@ setInterval(()=> {
     msg_e.show();
     msg_e.css("opacity", "1");
 
-    hasNewMessage = true;
+    newMessages++;
   }
 
   var scroll = $("#scroll-wnd")[0];
 
-  if(hasNewMessage) {
-    if(scroll.scrollHeight - scroll.scrollTop < scroll.clientHeight + 100) {
+  if(newMessages > 0) {
+    if((scroll.scrollHeight - scroll.scrollTop < scroll.clientHeight + 100) || newMessages > 5) {
       scroll.scrollTop = scroll.scrollHeight - scroll.clientHeight;
     }
   }
