@@ -35,7 +35,6 @@ class TB {
 
   static Init()
   {
-    return;
     this.ReadLocalStorage();
 
     TBBackpack.GetItemInfo("https://backpack.tf/stats/Unique/Mann%20Co.%20Supply%20Crate%20Key/Tradable/Craftable").then((info) => {
