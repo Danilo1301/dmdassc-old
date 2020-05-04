@@ -1,4 +1,8 @@
-const socket = io("/chat");
+const socket = io("/chat", {
+  transports: ['websocket']
+});
+
+console.log("websocket")
 
 let messages = [];
 
@@ -84,7 +88,7 @@ const getMessages = function() {
         }
       }
 
-      if(!exists) {
+      if(!exists && socket.connected) {
         var n = messages.splice(messages.indexOf(m), 1)
         $("div[msg-id='"+m.id+"']").remove();
       }
@@ -150,4 +154,8 @@ socket.on("connect", () => {
   socket.emit("join", (info) => {
     console.log("join answer", info)
   });
+})
+
+socket.on("disconnect", () => {
+  messages.push({"id":"DISCONNECT_fqid8Cb5FewMABrxKVjClcXbnTuJln1V","background":"#ff3a3a","type":1,"time":1588606933135,"content":"You lost connection to the server. Please, refresh the page!","allowHtml":true});
 })

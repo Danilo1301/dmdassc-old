@@ -12,7 +12,6 @@ class TBStorage {
     }
 
     if(!fs.existsSync(file_path)) {
-      fs.writeFileSync(file_path, JSON.stringify({}));
       return;
     }
 
