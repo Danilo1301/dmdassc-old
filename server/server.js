@@ -27,7 +27,6 @@ bots.createIoServer(io);
 
 const tf2 = require('./tf2');
 tf2.setServerPath(__serverPath);
-tf2.createIoServer(io);
 
 const chat = require('./chat');
 chat.setServerPath(__serverPath);

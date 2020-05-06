@@ -1,4 +1,4 @@
-const socket = io("/tf2");
+const socket = io("dmdassc-tf2-bot.glitch.me");
 
 let search = {start_from: 0, items_for_page: 7, pages: 0};
 
@@ -72,7 +72,7 @@ $("#edit-blacklist").click(()=> {
 
 
   socket.emit("get_blacklist", function(words) {
-    console.log("Got", words)
+    //console.log("Got", words)
 
     var val = "";
     for (var w of words) {
@@ -196,7 +196,7 @@ function openwdn(url) {
 function showitem(id) {
   var item = listItems[id];
 
-  console.log(item)
+  //console.log(item)
 
   if(!item.updated_at) {
     return alert("Este item ainda não foi atualizado!");
@@ -238,7 +238,7 @@ function showitem(id) {
 }
 
 socket.on("item_completed", function(itemid, left) {
-  console.log(`Item #${itemid} updated (${left} left)`);
+  //console.log(`Item #${itemid} updated (${left} left)`);
   $(".items-maintext").text(`Itens (${left} na fila)`)
 
   var found = null;
@@ -248,14 +248,14 @@ socket.on("item_completed", function(itemid, left) {
   }
 
   if(found) {
-    console.log('found')
+    //console.log('found')
     socket.emit("get_item_info", itemid, function(item) {
       listItems[found.pos] = item;
       applyInfoToElement($(`.item#item_${found.pos}`), item);
 
       if($("#item-info").css("display") == "block" && $(`button[target-item='${item.id}']`)[0] != undefined) {
-        console.log(found.pos)
-        console.log(listItems[found.pos])
+        //console.log(found.pos)
+        //console.log(listItems[found.pos])
         showitem(found.pos);
         //alert("Atualizado com sucesso!")
       }

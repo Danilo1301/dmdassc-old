@@ -150,9 +150,9 @@ setInterval(()=> {
 },100);
 
 socket.on("connect", () => {
-  console.log("join..")
+  //console.log("join..")
   socket.emit("join", (info) => {
-    console.log("join answer", info)
+    //console.log("join answer", info)
   });
 })
 
