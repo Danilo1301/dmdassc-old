@@ -191,7 +191,7 @@ setInterval(()=> {
 socket.on("connect", () => {
   //console.log("join..")
 
-  socket.emit("join", (document.cookie, info) => {
+  socket.emit("join", document.cookie, (info) => {
 
 
 
