@@ -30,7 +30,6 @@ tf2.setServerPath(__serverPath);
 
 const chat = require('./chat');
 chat.setServerPath(__serverPath);
-chat.createIoServer(io);
 
 const cafemania_server = require('./cafemania_server');
 cafemania_server.start(io);

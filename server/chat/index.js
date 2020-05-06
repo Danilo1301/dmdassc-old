@@ -1,12 +1,7 @@
 const express = require('express'), router = express.Router();
 const correctPath = require('../utils/correctPath.js');
 
-const server = require('./server');
-server.Init();
-
 let __serverPath = "/";
-
-let io;
 
 router.get('/', function(req, res) {
   if(correctPath.fix(req, res)) { return; };
@@ -18,12 +13,7 @@ router.get('/', function(req, res) {
   res.sendFile(`${__serverPath}/views/chat.html`);
 })
 
-const createIoServer = server.SetupServer;
-
-
-
 module.exports.router = router;
-module.exports.createIoServer = createIoServer;
 module.exports.setServerPath = function(newPath) { __serverPath = newPath; };
 
 function makeid(length) {
