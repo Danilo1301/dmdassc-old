@@ -1,4 +1,4 @@
-const socket = io("dmdassc-chat.glitch.me");
+const socket = io("dmdassc-chat.glitch.me", {transports: "websocket"});
 //const socket = io("127.0.0.1:3001");
 
 let messages = [];
@@ -191,7 +191,7 @@ setInterval(()=> {
 socket.on("connect", () => {
   //console.log("join..")
 
-  socket.emit("join", (info) => {
+  socket.emit("join", (document.cookie, info) => {
 
 
 
