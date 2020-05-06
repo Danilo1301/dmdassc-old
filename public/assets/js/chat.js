@@ -1,4 +1,4 @@
-const socket = io("dmdassc-chat.glitch.me", {transports: "websocket"});
+const socket = io("dmdassc-chat.glitch.me", {transports: ["websocket"]});
 //const socket = io("127.0.0.1:3001");
 
 let messages = [];
