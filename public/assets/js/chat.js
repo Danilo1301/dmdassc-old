@@ -1,6 +1,9 @@
-const socket = io("dmdassc-chat.glitch.me");
+//const socket = io("dmdassc-chat.glitch.me");
+const socket = io("127.0.0.1:3001");
 
 let messages = [];
+
+let commands = [["help"], ["admin login", "[argr1] [arg2]"]];
 
 let message_templates = [(`
   <div class="msg row border py-3">
@@ -10,7 +13,6 @@ let message_templates = [(`
     <div class="col px-1">
       <span style="display: none;" class="msg-badge badge">BADGE</span>
       <b class="msg-username">USER_NAME</b>
-      <b>:</b>
       <span class="msg-text">MESSAGE</span>
     </div>
   </div>
@@ -32,14 +34,26 @@ let message_templates = [(`
 
 const setMsgInfo = function(msg_e, msg) {
 
-  if(msg.badge) {
-    msg_e.find(".msg-badge").show();
-    msg_e.find(".msg-badge").text(msg.badge.text);
-    msg_e.find(".msg-badge").css("background-color", msg.badge.background);
-    msg_e.find(".msg-badge").css("color", msg.badge.color);
+
+
+  if(msg.user) {
+    msg_e.find(".msg-username").text(msg.user.nickname);
+    msg_e.find(".msg-username").css("background-color", msg.user.background);
+    msg_e.find(".msg-username").css("color", msg.user.color);
+
+    if(msg.user.badge) {
+      msg_e.find(".msg-badge").show();
+      msg_e.find(".msg-badge").text(msg.user.badge.text);
+      msg_e.find(".msg-badge").css("background-color", msg.user.badge.background);
+      msg_e.find(".msg-badge").css("color", msg.user.badge.color);
+    }
   }
 
-  msg_e.find(".msg-username").text(msg.nickname);
+
+
+
+
+
   if(msg.allowHtml) {
     msg_e.find(".msg-text").html(msg.content);
   } else {
@@ -102,15 +116,44 @@ getMessages();
 
 const sendMessage = function() {
   socket.emit("send_message", $("#inputText").val());
-  $("#inputText").val("")
+  $("#inputText").val("");
+  $("#cmd-list").hide();
 }
 
-$("#inputText").on('keydown', function(e) { if (e.which == 13) { sendMessage(); } });
+$("#inputText").on('keydown', (e) => { if(e.which == 13) { sendMessage(); } });
+$('#inputText').on('input', (e) => {
+  var val = $('#inputText').val();
+
+  var display_commands = [];
+
+  if(val.startsWith("/")) {
+    for (var cmd of commands) {
+      if(cmd[0].includes(val.slice(1))) {
+        display_commands.push(cmd);
+      }
+    }
+
+    $("#cmd-list").show();
+    $("#cmd-list div").remove();
+    $("#cmd-list").css("top", `-${40*display_commands.length}px`);
+
+    for (var cmd of display_commands) {
+      var elm = `<div class="row px-2 py-2 border" style="height: 40px;">/${cmd[0]} <b style="margin-left: 5px">${cmd[1] || ""}</b></div>`;
+      $("#cmd-list").append(elm);
+    }
+  } else {
+      $("#cmd-list").hide();
+  }
+
+
+});
 
 setInterval(()=> {
 
+  var scroll = document.getElementById("scroll-wnd");
 
   var newMessages = 0;
+  var canScroll = scroll.scrollHeight - scroll.scrollTop < scroll.clientHeight + 100;
 
   for (var msg of messages) {
 
@@ -135,19 +178,23 @@ setInterval(()=> {
     newMessages++;
   }
 
-  var scroll = $("#scroll-wnd")[0];
 
   if(newMessages > 0) {
-    if((scroll.scrollHeight - scroll.scrollTop < scroll.clientHeight + 100) || newMessages > 5) {
+    if((canScroll) || newMessages > 5) {
       scroll.scrollTop = scroll.scrollHeight - scroll.clientHeight;
     }
   }
+
+
 },100);
 
 socket.on("connect", () => {
   //console.log("join..")
-  
+
   socket.emit("join", (info) => {
+    
+
+
     //console.log("join answer", info)
   });
 })
