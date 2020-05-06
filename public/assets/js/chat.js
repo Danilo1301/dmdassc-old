@@ -1,5 +1,5 @@
-//const socket = io("dmdassc-chat.glitch.me");
-const socket = io("127.0.0.1:3001");
+const socket = io("dmdassc-chat.glitch.me");
+//const socket = io("127.0.0.1:3001");
 
 let messages = [];
 
@@ -192,7 +192,7 @@ socket.on("connect", () => {
   //console.log("join..")
 
   socket.emit("join", (info) => {
-    
+
 
 
     //console.log("join answer", info)
