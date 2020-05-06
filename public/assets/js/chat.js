@@ -1,11 +1,6 @@
-const socket = io("/chat", {
-  transports: ['websocket']
-});
-
-console.log("websocket")
+const socket = io("dmdassc-chat.glitch.me");
 
 let messages = [];
-
 
 let message_templates = [(`
   <div class="msg row border py-3">
@@ -151,11 +146,12 @@ setInterval(()=> {
 
 socket.on("connect", () => {
   //console.log("join..")
+  
   socket.emit("join", (info) => {
     //console.log("join answer", info)
   });
 })
 
 socket.on("disconnect", () => {
-  messages.push({"id":"DISCONNECT_fqid8Cb5FewMABrxKVjClcXbnTuJln1V","background":"#ff3a3a","type":1,"time":1588606933135,"content":"You lost connection to the server. Please, refresh the page!","allowHtml":true});
+  messages.push({"id":"DISCONNECT_fqid8Cb5FewMABrxKVjClcXbnTuJln1V","background":"#ff3a3a","type":1,"time":Date.now(),"content":"You lost connection to the server. Please, refresh the page!","allowHtml":true});
 })
