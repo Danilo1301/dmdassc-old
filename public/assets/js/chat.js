@@ -3,10 +3,10 @@ const socket = io("dmdassc-chat.glitch.me", {transports: ["websocket"]});
 
 let messages = [];
 
-let commands = [["help"], ["admin login", "[argr1] [arg2]"]];
+let commands = [["help"], ["nick", "[your-nick]"], ["htmlformat"], ["admin login", "[password]"]];
 
 let message_templates = [(`
-  <div class="msg row border py-3">
+  <div class="msg row py-3">
     <div class="col-auto px-2" style="max-width: 60px;">
       <span class="msg-time">TIME</span>
     </div>
@@ -17,12 +17,12 @@ let message_templates = [(`
     </div>
   </div>
 `), (`
-  <div class="msg row border py-3">
+  <div class="msg row py-3">
     <div class="col-auto px-2" style="max-width: 60px;">
       <span class="msg-time">TIME</span>
     </div>
     <div class="col px-1">
-      <span style="display: none;" class="msg-badge badge">SERVER</span>
+      <span style="display: none;" class="msg-badge badge">BADGE</span>
       <b class="msg-text">SERVER_MESSAGE</b>
     </div>
   </div>
